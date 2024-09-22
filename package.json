@@ -1,0 +1,23 @@
+{
+  "name": "hcbthing",
+  "version": "1.0.0",
+  "module": "src/app.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch ./src/app.ts",
+    "dev:webserver": "bun run --watch ./src/webserver.ts",
+    "start": "bun run ./src/app.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/express": "^4.17.21",
+    "express": "^4.21.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "innerhcb": "1.0.1",
+    "zod": "^3.23.8"
+  }
+}

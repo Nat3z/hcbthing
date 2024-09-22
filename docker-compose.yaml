@@ -1,0 +1,10 @@
+services:
+  hcbthing:
+    build: .
+    environment:
+      - HCB_AUTH_TOKEN=your_auth_token # Find it with this script: https://github.com/Nat3z/innerhcb
+      - HCB_ORGANIZATION_ID=your_organization_id # Go to your organization and get it here: https://hcb.hackclub.com/{ORG_ID}
+      - HCBTHING_SECRET=your_secret_thing # Choose a super secret password for HCB to encrypt responses with
+      - HCBTHING_WEBHOOK=https://your_webhook_url/hcbthing # The webhook used to consume HCBThing responses.
+    network_mode: bridge
+  
