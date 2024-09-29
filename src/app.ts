@@ -15,7 +15,8 @@ const EnvSchema = z.object({
   HCB_ORGANIZATION_ID: z.string(),
   HCBTHING_SECRET: z.string(),
   HCBTHING_WEBHOOK: z.string().url(),
-})
+  HCBBTHING_DELAY: z.number().optional().default(5 * 60 * 1000) // 5 minutes
+});
 
 const safeEnv = EnvSchema.safeParse(envUnparsed);
 if (!safeEnv.success) {
@@ -39,8 +40,11 @@ export const env = safeEnv.data;
 const hcb = new HCBAccount(env.HCB_AUTH_TOKEN);
 console.log('Connecting to HCB Account...');
 await hcb.pre();
-console.log('HCB Account connected, entering main loop...');
-
+console.log('HCB Account connected, checking authorization...');
+if (!await hcb.isAuthorized(env.HCB_ORGANIZATION_ID)) {
+  console.error('ERROR: Not authorized to access organization with ID: ' + env.HCB_ORGANIZATION_ID);
+  process.exit(1);
+}
 
 async function main() {
   const transactions = await hcb.getTransactions(env.HCB_ORGANIZATION_ID);
@@ -67,7 +71,7 @@ async function main() {
         data: donation
       }
       const encrypted = encryptWithSecret(env.HCBTHING_SECRET, JSON.stringify(data));
-      callWebhook(encrypted); 
+      callWebhook(encrypted);
       await hcb.createTag(env.HCB_ORGANIZATION_ID, transaction.transaction_id, 'Processed', 'muted');
       console.log('Processed transaction: ' + transaction.transaction_id);
     }
@@ -93,4 +97,4 @@ function callWebhook(data: any) {
   })
 }
 main()
-setInterval(main, 10000);
+setInterval(main, env.HCBBTHING_DELAY);

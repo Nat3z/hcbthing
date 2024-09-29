@@ -17,7 +17,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "innerhcb": "1.0.1",
+    "innerhcb": "1.1.0",
     "zod": "^3.23.8"
   }
 }
